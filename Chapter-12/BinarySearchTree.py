@@ -8,6 +8,10 @@ class TreeNode(object):
 	def __str__(self):
 		return "({})".format(self.key)
 
+class BST(object):
+	def __init__(self, root=None):
+		self.root = root
+
 def TreeSearch(root, key):
 	if root is None or root.key == key:
 		return root
@@ -40,12 +44,38 @@ def TreeSuccessor(node):
 		y = y.parent
 	return y
 
+
+def TreePredecessor(node):
+	if node is None:
+		return None
+	if node.left is not None:
+		return TreeMaximum(node.left)
+	y = node.parent
+	while y is not None and y.left == node:
+		node = y
+		y = y.parent
+	return y
+
 def InorderTreeWalk(root):
 	if root is None:
 		return
 	InorderTreeWalk(root.left)
 	print(root.key)
 	InorderTreeWalk(root.right)
+
+def TreeInsert(tree, node):
+	y = None
+	x = tree.root
+	while x is not None:
+		y = x
+		x = x.left if node.key < x.key else x.right
+	node.parent = y
+	if y is None:
+		tree.root = node
+	elif node.key < y.key:
+		y.left = node
+	else:
+		y.right = node
 
 
 if __name__ == '__main__':
@@ -59,8 +89,8 @@ if __name__ == '__main__':
 	n9.parent = n13
 	n7 = TreeNode(7, right=n13)
 	n13.parent = n7
-	n6 = TreeNode(6, left=n2, right=n7)
-	n2.parent = n6
+	n6 = TreeNode(6, left=n3, right=n7)
+	n3.parent = n6
 	n7.parent = n6
 	n17 = TreeNode(17)
 	n20 = TreeNode(20)
@@ -74,4 +104,9 @@ if __name__ == '__main__':
 
 	print(TreeSuccessor(n6))
 	print(TreeSuccessor(n13))
+	print(TreePredecessor(n6))
+	print(TreePredecessor(n17))
+	tree = BST(root)
+	TreeInsert(tree, TreeNode(10))
+	InorderTreeWalk(tree.root)
 
